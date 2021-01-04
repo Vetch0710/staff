@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.happyclock.mapper.hcPatientsInfoMapper">
+
+    <resultMap type="hcPatientsInfo" id="hcPatientsInfoResult">
+        <result property="patientsId"    column="id"    />
+        <result property="inputtime"    column="inputtime"    />
+        <result property="inputtime"    column="inputtime"    />
+        <result property="inputtime"    column="inputtime"    />
+        <result property="doctorname"    column="doctorname"    />
+        <result property="hospname"    column="hospname"    />
+        <result property="dosage"    column="dosage"    />
+        <result property="patientname"    column="patientname"    />
+        <result property="inputorname"    column="inputorname"    />
+        <result property="dayNum"    column="day_num"    />
+        <result property="inputtime"    column="inputtime"    />
+        <result property="sureState"    column="sure_state"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <resultMap type="hcPatientsInfoStatistical" id="hcPatientsInfoStatisticalResult">
+        <result property="inputtime"    column="inputtime"    />
+        <result property="doctorname"    column="doctorname"    />
+        <result property="PTNum"    column="PTNum"    />
+    </resultMap>
+
+    <resultMap type="hcPatientsInfoStatisticalNumber" id="hcPatientsInfoStatisticalNumberResult">
+        <result property="inputtime"    column="inputtime"    />
+        <result property="doctorname"    column="doctorname"    />
+        <result property="num"    column="num"    />
+        <result property="patientname"    column="patientname"    />
+    </resultMap>
+
+    <sql id="selecthcPatientsInfoVo">
+        select t.id, t.inputtime, t.doctorname, t.hospname, t.dosage, t.patientname, t.inputorname, t.day_num, t.inputtime, t.sure_state, t.create_time, t.update_time,
+        m.dict_label
+       AS real_hospname,
+       f.dict_label
+       as real_inputorname,
+       h.dict_label
+       as real_sure_state,
+       date(datetime(inputtime),'+'||day_num||' days') as notitime
+       from
+        hc_patients_info t left join (SELECT a.dict_label,a.dict_value
+             FROM sys_dict_data a WHERE a.dict_type = 'hc_v_hospital') m on t.HOSPNAME=m.dict_value
+
+             left join (SELECT a.dict_label,a.dict_value
+             FROM sys_dict_data a WHERE a.dict_type = 'hc_inputorname') f on t.HOSPNAME=f.dict_value
+
+             left join (SELECT a.dict_label,a.dict_value
+             FROM sys_dict_data a WHERE a.dict_type = 'hc_sure_state') h on t.HOSPNAME=h.dict_value
+    </sql>
+
+    <select id="selecthcPatientsInfoList" parameterType="hcPatientsInfo" resultMap="hcPatientsInfoResult">
+        <include refid="selecthcPatientsInfoVo"/>
+        <where>
+            <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''"> and inputtime between #{beginTime} and #{endTime}</if>
+            <if test="doctorname != null  and doctorname != ''"> and doctorname like '%'|| #{doctorname}||'%'</if>
+            <if test="hospname != null  and hospname != ''"> and hospname = #{hospname}</if>
+            <if test="patientname != null  and patientname != ''"> and patientname like '%'||#{patientname}||'%'</if>
+            <if test="sureState != null  and sureState != ''"> and sure_state = #{sureState}</if>
+        </where>
+    </select>
+
+    <select id="selecthcPatientsInfoById" parameterType="Integer" resultMap="hcPatientsInfoResult">
+        <include refid="selecthcPatientsInfoVo"/>
+        where id = #{patientsId}
+    </select>
+
+    <insert id="inserthcPatientsInfo" parameterType="hcPatientsInfo">
+        insert into hc_patients_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientsId != null">id,</if>
+            <if test="inputtime != null and inputtime != ''">inputtime,</if>
+            <if test="inputtime != null">inputtime,</if>
+            <if test="inputtime != null">inputtime,</if>
+            <if test="doctorname != null and doctorname != ''">doctorname,</if>
+            <if test="hospname != null and hospname != ''">hospname,</if>
+            <if test="dosage != null and dosage != ''">dosage,</if>
+            <if test="patientname != null and patientname != ''">patientname,</if>
+            <if test="inputorname != null and inputorname != ''">inputorname,</if>
+            <if test="dayNum != null">day_num,</if>
+            <if test="inputtime != null and inputtime != ''">inputtime,</if>
+           <!-- <if test="sureState != null">sure_state,</if>-->
+            sureState,
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientsId != null">#{patientsId},</if>
+            <if test="inputtime != null and inputtime != ''">#{inputtime},</if>
+            <if test="inputtime != null">#{inputtime},</if>
+            <if test="inputtime != null">#{inputtime},</if>
+            <if test="doctorname != null and doctorname != ''">#{doctorname},</if>
+            <if test="hospname != null and hospname != ''">#{hospname},</if>
+            <if test="dosage != null and dosage != ''">#{dosage},</if>
+            <if test="patientname != null and patientname != ''">#{patientname},</if>
+            <if test="inputorname != null and inputorname != ''">#{inputorname},</if>
+            <if test="dayNum != null">#{dayNum},</if>
+            <if test="inputtime != null and inputtime != ''">#{inputtime},</if>
+            <!--<if test="sureState != null">#{sureState},</if>-->
+            0,
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatehcPatientsInfo" parameterType="hcPatientsInfo">
+        update hc_patients_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inputtime != null and inputtime != ''">inputtime = #{inputtime},</if>
+            <if test="inputtime != null">inputtime = #{inputtime},</if>
+            <if test="inputtime != null">inputtime = #{inputtime},</if>
+            <if test="doctorname != null and doctorname != ''">doctorname = #{doctorname},</if>
+            <if test="hospname != null and hospname != ''">hospname = #{hospname},</if>
+            <if test="dosage != null and dosage != ''">dosage = #{dosage},</if>
+            <if test="patientname != null and patientname != ''">patientname = #{patientname},</if>
+            <if test="inputorname != null and inputorname != ''">inputorname = #{inputorname},</if>
+            <if test="dayNum != null">day_num = #{dayNum},</if>
+            <if test="inputtime != null and inputtime != ''">inputtime = #{inputtime},</if>
+            <if test="sureState != null">sure_state = #{sureState},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{patientsId}
+    </update>
+
+    <delete id="deletehcPatientsInfoById" parameterType="Integer">
+        delete from hc_patients_info where id = #{patientsId}
+    </delete>
+
+    <delete id="deletehcPatientsInfoByIds" parameterType="String">
+        delete from hc_patients_info where id in
+        <foreach item="patientsId" collection="array" open="(" separator="," close=")">
+            #{patientsId}
+        </foreach>
+    </delete>
+
+    <select id="selecthcPatientsInfoListRemind" parameterType="hcPatientsInfo" resultMap="hcPatientsInfoResult">
+        <include refid="selecthcPatientsInfoVo"/>
+        where sure_state = 0 and notitime &lt;= date()
+
+    </select>
+
+    <select id="selecthcPatientsInfoStatisticalList" parameterType="hcPatientsInfoStatistical" resultMap="hcPatientsInfoStatisticalResult">
+        SELECT strftime('%Y-%m', inputtime) AS inputtime,
+               doctorname,
+               count(1)  as "PTNum"
+       FROM hc_patients_info
+        <where>
+            <if test="inputtime != null and inputtime != ''"> and inputtime = #{inputtime} </if>
+            <if test="doctorname != null  and doctorname != ''"> and doctorname = #{doctorname}</if>
+        </where>
+        GROUP BY strftime('%Y-%m', inputtime),
+        doctorname
+
+    </select>
+
+    <select id="selecthcPatientsInfoStatisticalListNum" parameterType="hcPatientsInfoStatisticalNumber" resultMap="hcPatientsInfoStatisticalNumberResult">
+        SELECT  inputtime,
+        doctorname,
+        patientname,
+        num
+        FROM v_hc_patients_info_num
+        <where>
+            <if test="inputtime != null and inputtime != ''"> and strftime('%Y-%m', inputtime) = #{inputtime} </if>
+            <if test="doctorname != null  and doctorname != ''"> and doctorname = #{doctorname}</if>
+            <if test="patientname != null  and patientname != ''"> and patientname  = #{patientname}</if>
+            <if test="num != null  and num != ''"> and num  = #{num}</if>
+        </where>
+
+
+    </select>
+
+</mapper>
