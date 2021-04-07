@@ -258,6 +258,8 @@ public class SysMenuServiceImpl implements ISysMenuService
     public int insertMenu(SysMenu menu)
     {
     	menu.setCreateTime(new Date().getTime()+"");
+        System.out.println(menu.toString());
+
         return menuMapper.insertMenu(menu);
     }
 

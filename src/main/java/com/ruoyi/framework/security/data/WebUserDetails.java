@@ -6,8 +6,13 @@ import java.util.Map;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
+//*
+// 网站用户
+// */
 public class WebUserDetails  implements UserDetails {
-	
+
+	//网站用户信息
 	private Map<String,Object> user;
 	
 	public WebUserDetails(Map<String,Object> user){

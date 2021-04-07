@@ -17,7 +17,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.web.domain.AjaxResult;
 
 /**
- * 认证失败处理类 返回未授权
+ * 认证失败处理类 返回未授权，授权过期
  * 
  * @author ruoyi
  */

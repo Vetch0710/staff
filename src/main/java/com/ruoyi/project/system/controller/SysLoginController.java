@@ -91,7 +91,9 @@ public class SysLoginController
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         // 用户信息
         SysUser user = loginUser.getUser();
+        //根据uid获取路由信息
         List<SysMenu> menus = menuService.selectMenuTreeByUserId(user.getUserId());
+        //根据路由信息 转换成前端可识别的路由组件信息结构
         return AjaxResult.success(menuService.buildMenus(menus));
     }
 }

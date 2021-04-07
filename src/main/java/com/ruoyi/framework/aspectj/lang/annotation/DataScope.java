@@ -25,4 +25,9 @@ public @interface DataScope
      * 用户表的别名
      */
     public String userAlias() default "";
+
+    /**
+     * 员工表的别名
+     */
+    public String staffAlias() default "";
 }

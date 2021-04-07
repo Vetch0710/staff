@@ -64,16 +64,19 @@ public class SysLoginService
      * @return 结果
      */
     public String login(String username, String password, String code, String uuid)
-    {
+    {   //获取uuid
         String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
+        //从缓存中获取验证码
         String captcha = ehcacheClient.get(verifyKey);
+        //删除缓存中的验证码
         ehcacheClient.delete(verifyKey);
-        if (captcha == null)
+        //验证验证码
+        if (captcha == null) //验证码过期
         {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire")));
             throw new CaptchaExpireException();
         }
-        if (!code.equalsIgnoreCase(captcha))
+        if (!code.equalsIgnoreCase(captcha))//验证码错误
         {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error")));
             throw new CaptchaException();
@@ -86,6 +89,7 @@ public class SysLoginService
             if (!SecurityUtils.matchesPassword(password,userDetails.getPassword())) {
                 throw new BadCredentialsException("密码不正确");
             }
+            //获取权限
             authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

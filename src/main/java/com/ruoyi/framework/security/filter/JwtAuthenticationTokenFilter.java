@@ -47,12 +47,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException{
+    	//获取token
 		 String authHeader = request.getHeader(this.tokenHeader);
 	     if (authHeader != null) {
 	    	 if(authHeader.startsWith(Constants.TOKEN_PREFIX+this.tokenHeadAdmin)||authHeader.startsWith(this.tokenHeadAdmin)){
+	    	 	//从token中，获取用户信息
 	    		 LoginUser loginUser = tokenService.getLoginUser(request);
 	    		 if (StringUtils.isNotNull(loginUser) && StringUtils.isNull(SecurityUtils.getAuthentication()))
-	    	       {
+	    	       {	//刷新token有效期
 	    	           tokenService.verifyToken(loginUser);
 	    	           UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
 	    	           authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

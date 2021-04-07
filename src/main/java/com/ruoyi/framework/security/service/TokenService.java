@@ -66,6 +66,7 @@ public class TokenService
     {
         // 获取请求携带的令牌
         String token = getToken(request);
+        System.out.println("====="+token);
         if (StringUtils.isNotEmpty(token))
         {
             Claims claims = parseToken(token);
@@ -111,11 +112,14 @@ public class TokenService
     {
         String token = IdUtils.fastUUID();
         loginUser.setToken(token);
+        //设置代理
         setUserAgent(loginUser);
+        //设置token有效时间
         refreshToken(loginUser);
 
         Map<String, Object> claims = new HashMap<>();
         claims.put(Constants.LOGIN_USER_KEY, token);
+        //将token加密并返回
         return createToken(claims);
     }
 

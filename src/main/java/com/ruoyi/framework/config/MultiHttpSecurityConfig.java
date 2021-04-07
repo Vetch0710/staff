@@ -80,7 +80,9 @@ public class MultiHttpSecurityConfig  {
     {
         return new BCryptPasswordEncoder();
     }
-    
+
+
+    //网站用户
     @Configuration
     @Order(1)
     public class UserWebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -123,7 +125,7 @@ public class MultiHttpSecurityConfig  {
         }
     }
     
-    
+    //管理用户---管理员
     @Configuration
     @Order(2)
     public class AdminWebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -233,6 +235,7 @@ public class MultiHttpSecurityConfig  {
         return username -> {
         	SysUser admin = sysUserMapper.selectUserByUserName(username);
             if (admin != null){
+                //获取权限  x:x:x权限集合
             	Set<String> permissionList=permissionService.getMenuPermission(admin);
                 return new AdminUserDetails(admin,permissionList);
             }

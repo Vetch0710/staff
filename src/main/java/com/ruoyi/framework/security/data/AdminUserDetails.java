@@ -10,9 +10,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.ruoyi.project.system.domain.SysUser;
 
+/**
+ * 管理员用户
+ * */
 public class AdminUserDetails  implements UserDetails {
 
+	//管理员信息
 	private SysUser user;
+	//管理员权限
 	private Set<String> permissionSet;
 	
 

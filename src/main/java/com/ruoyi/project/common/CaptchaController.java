@@ -38,7 +38,7 @@ public class CaptchaController
         // 唯一标识
         String uuid = IdUtils.simpleUUID();
         String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
-
+        //存入缓存中  key：uuid  过期时间：120s   value：验证码
         ehcacheClient.set(verifyKey, Constants.CAPTCHA_EXPIRATION*60,verifyCode);
         // 生成图片
         int w = 111, h = 36;

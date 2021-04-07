@@ -1,6 +1,9 @@
 package com.ruoyi.project.system.controller;
 
 import java.util.List;
+
+import com.ruoyi.project.system.domain.SysStaff;
+import com.ruoyi.project.system.service.ISysStaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -60,6 +63,7 @@ public class SysUserController extends BaseController
     {
         startPage();
         List<SysUser> list = userService.selectUserList(user);
+        System.out.println("=============="+list);
         return getDataTable(list);
     }
 
