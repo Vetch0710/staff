@@ -1,20 +1,25 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="用药日期">
-            <el-date-picker
-              v-model="dateRange"
-              size="small"
-              style="width: 240px"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
-          </el-form-item>
-<!-- 
+        <el-date-picker
+          v-model="dateRange"
+          size="small"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          unlink-panels
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item>
+      <!-- 
       <el-form-item label="用药日期-开始" prop="inputtime">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.inputtime"
@@ -44,7 +49,13 @@
         />
       </el-form-item>
       <el-form-item label="医院名称" prop="hospname">
-        <el-select v-model="queryParams.hospname" placeholder="请选择医院名称" clearable size="small" style="width: 240px">
+        <el-select
+          v-model="queryParams.hospname"
+          placeholder="请选择医院名称"
+          clearable
+          size="small"
+          style="width: 240px"
+        >
           <el-option
             v-for="dict in hospnameOptions"
             :key="dict.dictValue"
@@ -64,7 +75,13 @@
         />
       </el-form-item>
       <el-form-item label="状态" prop="sureState">
-        <el-select v-model="queryParams.sureState" placeholder="请选择状态" clearable size="small" style="width: 240px">
+        <el-select
+          v-model="queryParams.sureState"
+          placeholder="请选择状态"
+          clearable
+          size="small"
+          style="width: 240px"
+        >
           <el-option
             v-for="dict in sureStateOptions"
             :key="dict.dictValue"
@@ -73,9 +90,17 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item style="width: 240px ;margin-left:68px;">
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      <el-form-item style="width: 240px; margin-left: 68px">
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重1置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -87,7 +112,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['happyclock:info:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -97,7 +123,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['happyclock:info:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -107,7 +134,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['happyclock:info:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -116,37 +144,67 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['happyclock:info:export']"
-        >导出</el-button>
+          >导出</el-button
+        >
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="infoList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" align="center" prop="" width="50px" >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.rowNum}}</span>
-                </template>
-              </el-table-column>
-      <el-table-column label="用药日期" align="center" prop="inputtime" width="100">
+      <el-table-column label="序号" align="center" prop="" width="50px">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.inputtime, '{y}-{m}-{d}') }}</span>
+          <span>{{ scope.row.rowNum }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="用药日期"
+        align="center"
+        prop="inputtime"
+        width="100"
+      >
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.inputtime, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
       <el-table-column label="医生姓名" align="center" prop="doctorname" />
-      <el-table-column label="医院名称" align="center" prop="hospname" :formatter="hospnameFormat" />
-      <el-table-column label="用量" align="center" prop="dosage" width="50"/>
+      <el-table-column
+        label="医院名称"
+        align="center"
+        prop="hospname"
+        :formatter="hospnameFormat"
+      />
+      <el-table-column label="用量" align="center" prop="dosage" width="50" />
       <el-table-column label="PT姓名" align="center" prop="patientname" />
-      <el-table-column label="录入人" align="center" prop="inputorname" :formatter="inputornameFormat" />
+      <el-table-column label="录入人" align="center" prop="inputorname" />
       <el-table-column label="提醒天数" align="center" prop="dayNum" />
-      <el-table-column label="提醒日期" align="center" prop="inputtime" width="100">
+      <el-table-column
+        label="提醒日期"
+        align="center"
+        prop="inputtime"
+        width="100"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.notitime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.notitime, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" prop="sureState" :formatter="sureStateFormat" />
+      <el-table-column
+        label="状态"
+        align="center"
+        prop="sureState"
+        :formatter="sureStateFormat"
+      />
       <!-- <el-table-column label="创建时间" align="center" prop="createTime" /> -->
       <!-- <el-table-column label="更新时间" align="center" prop="updateTime" />  -->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        width="150"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -154,35 +212,46 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['happyclock:info:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['happyclock:info:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
 
-<!-- 修改PT管理-信息维护对话框 -->
-    <el-dialog :title="title" :visible.sync="open_update" width="500px" append-to-body>
+    <!-- 修改PT管理-信息维护对话框 -->
+    <el-dialog
+      :title="title"
+      :visible.sync="open_update"
+      width="500px"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="用药日期" prop="inputtime">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.inputtime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择用药日期">
+            placeholder="选择用药日期"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="医生姓名" prop="doctorname">
@@ -205,14 +274,7 @@
           <el-input v-model="form.patientname" placeholder="请输入PT姓名" />
         </el-form-item>
         <el-form-item label="录入人">
-          <el-select v-model="form.inputorname" placeholder="请选择录入人">
-            <el-option
-              v-for="dict in inputornameOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
+          <el-input v-model="form.inputorname" placeholder="请输入录入人" />
         </el-form-item>
         <el-form-item label="提醒天数" prop="dayNum" width="50">
           <el-input v-model="form.dayNum" placeholder="请输入提醒天数" />
@@ -226,7 +288,7 @@
               :value="dict.dictValue"
             ></el-option>
           </el-select>
-        </el-form-item> 
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -235,14 +297,23 @@
     </el-dialog>
 
     <!-- 添加PT管理-信息维护对话框 -->
-    <el-dialog :title="title" :visible.sync="open_new" width="500px" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open_new"
+      width="500px"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="用药日期" prop="inputtime">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.inputtime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择用药日期">
+            placeholder="选择用药日期"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="医生姓名" prop="doctorname">
@@ -265,19 +336,11 @@
           <el-input v-model="form.patientname" placeholder="请输入PT姓名" />
         </el-form-item>
         <el-form-item label="录入人">
-          <el-select v-model="form.inputorname" placeholder="请选择录入人">
-            <el-option
-              v-for="dict in inputornameOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
+          <el-input v-model="form.inputorname" placeholder="请输入录入人" />
         </el-form-item>
         <el-form-item label="提醒天数" prop="dayNum" width="50">
           <el-input v-model="form.dayNum" placeholder="请输入提醒天数" />
         </el-form-item>
-        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -431,6 +494,8 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.dateRange = [] ;
+      this.queryParams.sureState = [] ;
       this.handleQuery();
     },
     // 多选框选中数据

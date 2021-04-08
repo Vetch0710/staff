@@ -333,6 +333,7 @@ import { getToken } from "@/utils/auth";
 import { treeselect } from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import Logo from '../../../layout/components/Sidebar/Logo'
 
 export default {
   name: "User",
@@ -458,6 +459,7 @@ export default {
     getList() {
       this.loading = true;
       listUser(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+        console.log(response)
           this.userList = response.rows;
           this.total = response.total;
           this.loading = false;
