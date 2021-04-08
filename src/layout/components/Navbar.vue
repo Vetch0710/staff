@@ -7,7 +7,7 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
-        
+
       <!--  <el-tooltip content="源码地址" effect="dark" placement="bottom">
           <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
         </el-tooltip>
@@ -27,7 +27,7 @@
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <!-- <img v-bind:src="logo" class="user-avatar" alt="小闹钟"> -->
-          <span  class="user-avatar">小闹钟</span>
+          <span  class="user-avatar">{{username}}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -86,9 +86,12 @@ export default {
       }
     }
   },
-  // data:{
-  //   logo:Logo,
-  // },
+  data() {
+    return {
+
+      username: this.$store.getters.name,
+    }
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')

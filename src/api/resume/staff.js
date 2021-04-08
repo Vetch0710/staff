@@ -41,7 +41,7 @@ export function updateStaff(data) {
 // 删除用户
 export function delStaff(userId) {
   return request({
-    url: '/resume/staff' + userId,
+    url: '/resume/staff/' + userId,
     method: 'delete'
   })
 }

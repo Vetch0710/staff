@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: '小闹钟系统',
+      title: '简历管理系统',
       logo: logoImg
     }
   }
