@@ -78,7 +78,9 @@ public class CalculateTime {
         int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);
 
         int age = yearNow - yearBirth;
-
+//        if (age == 0) {
+//            return age;
+//        }
         if (monthNow <= monthBirth) {
             if (monthNow == monthBirth) {
                 // monthNow==monthBirth

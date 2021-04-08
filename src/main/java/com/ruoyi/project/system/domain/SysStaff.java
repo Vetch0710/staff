@@ -12,7 +12,7 @@ import java.util.List;
  * @Description
  * @create 2021-04-02-11:16
  */
-public class SysStaff extends BaseEntity {
+public class SysStaff {
     private static final long serialVersionUID = 1L;
     /** 员工编号 */
     private String userId;

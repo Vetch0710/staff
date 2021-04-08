@@ -62,7 +62,7 @@ public class SysStaffController extends BaseController {
     public TableDataInfo list(QueryVo queryVo) {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         SysUser user = loginUser.getUser();
-        System.out.println("/////" + user);
+//        System.out.println("/////" + user);
         Long userId = user.getUserId();
         Map<String, String> role = urpService.selectRoleAndDeptByUserId(userId);
         List<SysStaff> list = new ArrayList<>();
@@ -114,6 +114,7 @@ public class SysStaffController extends BaseController {
     @Log(title = "简历信息管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysStaff staff) {
+        System.out.println(staff);
         if (UserConstants.NOT_UNIQUE.equals(staffService.checkStaffIdUnique(staff.getUserId()))) {
             return AjaxResult.error("新增员工'" + staff.getUserId() + "'失败，该员工ID已存在");
         }
@@ -129,9 +130,10 @@ public class SysStaffController extends BaseController {
     @Log(title = "简历信息管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysStaff staff) {
-        if (UserConstants.NOT_UNIQUE.equals(staffService.checkStaffIdUnique(staff.getUserId()))) {
-            return AjaxResult.error("新增员工'" + staff.getUserId() + "'失败，该员工ID已存在");
-        }
+        System.out.println("***********"+staff);
+//        if (UserConstants.NOT_UNIQUE.equals(staffService.checkStaffIdUnique(staff.getUserId()))) {
+//            return AjaxResult.error("新增员工'" + staff.getUserId() + "'失败，该员工ID");
+//        }
 
         return toAjax(staffService.updateStaff(staff));
     }
@@ -156,9 +158,9 @@ public class SysStaffController extends BaseController {
      */
     @ApiOperation("上传证件照")
     @Log(title = "上传证件照", businessType = BusinessType.UPDATE)
-    @PostMapping("/upload")
+    @PostMapping("/upload/{type}")
 //    @RequestHeader("accessToken") String accessToken
-    public AjaxResult avatar(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
+    public AjaxResult avatar(@RequestParam("file") MultipartFile file, HttpServletRequest request, @PathVariable String type) throws IOException {
 
 //        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
 //        System.out.println("*****" + loginUser.getUser());
@@ -171,6 +173,7 @@ public class SysStaffController extends BaseController {
             }
             AjaxResult ajax = AjaxResult.success();
             ajax.put("imgUrl", fileResult);
+            ajax.put("type", type);
             return ajax;
         }
 

@@ -105,9 +105,9 @@ public class SysStaffServiceImpl implements ISysStaffService {
             for (Field field : fs) {      //遍历属性
                 field.setAccessible(true); //设置属性是可以访问的（私有的也可以）
                 if (!"isFinish".equals(field.getName())) {
-                    if (field.get(staff) == null || field.get(staff) == "" ){
+                    if (field.get(staff) == null || field.get(staff) == ""||field.get(staff) == "null" ){
                         staff.setIsFinish("0");
-                        break;
+                        return;
                     }
                 }
             }
@@ -146,9 +146,9 @@ public class SysStaffServiceImpl implements ISysStaffService {
     public void updateAgeAndWorkDay(SysStaff staff)  {
         int age = CalculateTime.getAgeByBirthday(staff.getBirthDay());
         staff.setAge(age);
-        String workDay = staff.getGraduationDay();
-        if (!"".equals(workDay) && null != workDay) {
-            workDay = CalculateTime.getWorkDay(staff.getGraduationDay());
+        String graduationDay = staff.getGraduationDay();
+        if (!"".equals(graduationDay) && null != graduationDay) {
+           String workDay = CalculateTime.getWorkDay(graduationDay);
             staff.setWorkDay(workDay);
         }
     }
