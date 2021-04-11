@@ -23,7 +23,7 @@ public class CalculateTime {
      * @return
      */
     public static String timedate(String time) {
-        SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd");
         @SuppressWarnings("unused")
         long lcc = Long.valueOf(time);
         int i = Integer.parseInt(time);
@@ -39,7 +39,7 @@ public class CalculateTime {
      * @return
      */
     public static Date getDate(String time) {
-        SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+        SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         Date date = null;
         try {
             date = sdr.parse(time);
@@ -56,11 +56,12 @@ public class CalculateTime {
     public static int getAgeByBirthday(Object birthday) {
         Date date;
         if (birthday instanceof String) {
-            date = new Date(new Long(birthday.toString()));
+            date=getDate(birthday.toString());
+//            date = new Date(new Long(birthday.toString()));
         } else {
             date = (Date) birthday;
         }
-        System.out.println(date);
+//        System.out.println(date);
         Calendar cal = Calendar.getInstance();
 
         if (cal.before(date)) {
@@ -101,7 +102,9 @@ public class CalculateTime {
     public static String getWorkDay(Object workday) {
         Date date;
         if (workday instanceof String) {
-            date = new Date(new Long(workday.toString()));
+            date=getDate(workday.toString());
+
+//            date = new Date(new Long(workday.toString()));
         } else {
             date = (Date) workday;
         }

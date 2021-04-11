@@ -60,16 +60,14 @@ public class SysStaff {
     private String degree  ;
     /** 信息填写状态 */
     private String isFinish  ;
+    private String idCard  ;
 
-    public SysStaff() {
-    }
-
-    public SysStaff(String userId, String userName, String sex, Integer age, String birth_day, String phone, String nation, String marital, String hometown, String eduBackground, String school, String major, String graduationDay, String workDay, String workLevel, String department, String projectTeam, String leader, String idCardFront, String idCardBack, String diploma, String degree, String isFinish) {
+    public SysStaff(String userId, String userName, String sex, Integer age, String birthDay, String phone, String nation, String marital, String hometown, String eduBackground, String school, String major, String graduationDay, String workDay, String workLevel, String department, String projectTeam, String leader, String idCardFront, String idCardBack, String diploma, String degree, String isFinish, String idCard) {
         this.userId = userId;
         this.userName = userName;
         this.sex = sex;
         this.age = age;
-        this.birthDay = birth_day;
+        this.birthDay = birthDay;
         this.phone = phone;
         this.nation = nation;
         this.marital = marital;
@@ -88,6 +86,18 @@ public class SysStaff {
         this.diploma = diploma;
         this.degree = degree;
         this.isFinish = isFinish;
+        this.idCard = idCard;
+    }
+
+    public SysStaff() {
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
     }
 
     public Integer getAge() {
@@ -285,7 +295,7 @@ public class SysStaff {
                 ", userName='" + userName + '\'' +
                 ", sex='" + sex + '\'' +
                 ", age=" + age +
-                ", birth_day='" + birthDay + '\'' +
+                ", birthDay='" + birthDay + '\'' +
                 ", phone='" + phone + '\'' +
                 ", nation='" + nation + '\'' +
                 ", marital='" + marital + '\'' +
@@ -304,6 +314,7 @@ public class SysStaff {
                 ", diploma='" + diploma + '\'' +
                 ", degree='" + degree + '\'' +
                 ", isFinish='" + isFinish + '\'' +
+                ", idCard='" + idCard + '\'' +
                 '}';
     }
 }

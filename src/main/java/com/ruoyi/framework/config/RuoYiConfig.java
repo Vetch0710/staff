@@ -99,11 +99,26 @@ public class RuoYiConfig
     }
 
     /**
+     * 获取证件照上传路径
+     */
+    public static String getProfilePath(String username)
+    {
+        return getProfile()+"/profile" ;
+    }
+
+    /**
      * 获取下载路径
      */
     public static String getDownloadPath()
     {
         return getProfile() + "/download/";
+    }
+    /**
+     * 获取简历下载路径
+     */
+    public static String getDownloadStaffPath()
+    {
+        return getProfile() + "/download/staff/";
     }
 
     /**

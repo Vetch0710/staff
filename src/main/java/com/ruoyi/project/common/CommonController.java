@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,8 +68,8 @@ public class CommonController
     /**
      * 通用上传请求
      */
-    @PostMapping("/common/upload")
-    public AjaxResult uploadFile(MultipartFile file) throws Exception
+    @PostMapping("/common/upload/{type}")
+    public AjaxResult uploadFile(MultipartFile file ,@PathVariable String type) throws Exception
     {
         try
         {
@@ -80,6 +81,7 @@ public class CommonController
             AjaxResult ajax = AjaxResult.success();
             ajax.put("fileName", fileName);
             ajax.put("url", url);
+            ajax.put("type", type);
             return ajax;
         }
         catch (Exception e)

@@ -5,6 +5,7 @@ import com.ruoyi.project.system.domain.SysStaff;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.domain.vo.QueryVo;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -79,5 +80,13 @@ public interface ISysStaffService
      * @return 结果
      */
     public int deleteStaffByIds(String[] userIds);
+
+    /**
+     * 根据员工id查询员工信息
+     *
+     * @param queryVo 查询条件
+     * @return 结果
+     */
+    public List<HashMap<String,String>> exportStaff(QueryVo queryVo);
 
 }

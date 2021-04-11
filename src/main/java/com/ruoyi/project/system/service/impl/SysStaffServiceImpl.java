@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -153,6 +154,20 @@ public class SysStaffServiceImpl implements ISysStaffService {
         }
     }
 
+  /*  *//**
+     * 判断并修改简历证件照
+     *
+     * @param staff 员工信息
+     * @return 结果
+     *//*
+    public void updateProfilePic(SysStaff staff)  {
+        String degree = staff.getDegree();
+        String diploma = staff.getDiploma();
+        String idCardBack = staff.getIdCardBack();
+        String idCardFront = staff.getIdCardFront();
+
+    }*/
+
     /**
      * 修改保存用户信息
      *
@@ -195,4 +210,13 @@ public class SysStaffServiceImpl implements ISysStaffService {
     }
 
 
+    /**
+     * 根据员工id查询员工信息
+     *
+     * @param queryVo 查询条件
+     * @return 结果
+     */
+    public List<HashMap<String,String>> exportStaff(QueryVo queryVo){
+        return staffMapper.exportStaff(queryVo);
+    }
 }

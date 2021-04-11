@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.SysURPMapper">
+
+    <resultMap id="loopSpeedResult"   type="HashMap">
+        <result column="role_name" property="roleName"/>
+        <result column="dept_name" property="deptName" />
+        <result column="user_name" property="userName" />
+    </resultMap>
+    <resultMap id="projectResult"   type="HashMap">
+        <result column="name" property="projectName" />
+        <result column="user_name" property="projectManager"/>
+    </resultMap>
+    <resultMap id="udpResult"   type="HashMap">
+        <result column="name" property="projectName" />
+        <result column="dept_name" property="deptName"/>
+        <result column="user_name" property="projectManager"/>
+    </resultMap>
+
+    <sql id="selectRoleAndDept">
+        select distinct  r.role_name, d.dept_name,u.user_name
+        from sys_role r
+                 left join sys_user_role ur on ur.role_id = r.role_id
+                 left join sys_user u on u.user_id = ur.user_id
+                 left join sys_dept d on u.dept_id = d.dept_id
+    </sql>
+    <sql id="selectPro">
+        select distinct  p.name,u.user_name
+        from sys_project p
+                 left join sys_user_project up on up.project_id = p.id
+                 left join sys_user u on u.user_id = up.user_id
+    </sql>
+
+    <select id="selectRoleAndDeptByUserId" parameterType="Long" resultMap="loopSpeedResult">
+        <include refid="selectRoleAndDept"/>
+        where u.user_id=#{userID}
+    </select>
+
+
+    <select id="selectProByUserId" parameterType="Long" resultType="String">
+        <include refid="selectPro"/>
+        where u.user_id=#{userID}
+    </select>
+
+    <select id="selectProByDeptName" parameterType="String" resultType="String">
+        select distinct  p.name
+        from sys_project p
+                 left join sys_dept d on d.dept_id=p.dept_ID
+        where d.dept_name =#{deptName}
+    </select>
+
+    <select id="selectDeptList" parameterType="Long" resultType="String">
+        select distinct  dept_name
+        from sys_dept
+        where parent_id=110
+    </select>
+
+    <select id="selectProAndManager"  resultMap="projectResult">
+        select distinct  p.name,u.user_name
+        from sys_project p
+                 left join sys_user_project up on up.PROJECT_ID=p.ID
+                 left join sys_user u on up.USER_ID=U.user_id
+    </select>
+
+    <select id="selectUDP"  resultMap="udpResult"  parameterType="Long">
+        select distinct u.user_name,d.dept_name,p.name
+        from sys_user u
+                 left join sys_dept d on d.dept_id=u.dept_id
+                 left join sys_user_project up on up.USER_ID=u.user_id
+                 left join sys_project p on up.PROJECT_ID=p.ID
+        where u.user_id=#{uid}
+    </select>
+
+
+</mapper>
