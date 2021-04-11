@@ -196,7 +196,7 @@
     </el-row>
 
     <edit ref="edit"  @fetch-data="getList"></edit>
-
+    <download ref="download" ></download>
   </div>
 </template>
 
@@ -212,10 +212,11 @@
   import { getToken } from '@/utils/auth'
   import '@riophae/vue-treeselect/dist/vue-treeselect.css'
   import Edit from "./edit/index";
+  import Download from "./download/index";
 
   export default {
     name: 'index',
-    components: { Edit},
+    components: { Edit,Download},
     data() {
       return {
         //员工编号
@@ -344,7 +345,6 @@
       /** 查询用户列表 */
       getList() {
         this.loading = true
-        // console.log(this.queryParams)
         listStaff(this.queryParams, this.dateRange).then(response => {
             console.log(response)
             this.userList = response.rows
@@ -396,17 +396,22 @@
       },
       /** 导出按钮操作 */
       handleExport() {
-        const queryParams = this.queryParams
-        this.$confirm('是否确认导出所有用户数据项?', '警告', {
+        this.$confirm('是否确认导出当前用户下所有的员工简历?', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(function() {
-          return exportUser(queryParams)
-        }).then(response => {
-          this.download(response.msg)
-        }).catch(function() {
-        })
+        }).then(() => {
+          this.$refs["download"].showDownload();
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消下载'
+          });
+        });
+
+
+
       },
 
       /** 下载模板操作 */

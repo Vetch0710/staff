@@ -9,7 +9,7 @@ export function listUser(query) {
     params: query
   })
   console.log(list);
-  return list 
+  return list
 }
 
 // 查询用户详细

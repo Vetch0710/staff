@@ -9,7 +9,7 @@
                :before-close="handleClose">
       <el-row :gutter="15">
         <el-form ref="formData" :model="formData" :rules="rules" size="medium" label-width="94px">
-          <el-col :span="9">
+          <el-col :span="8">
             <el-form-item label="员工编号" prop="userId">
               <el-input v-model="formData.userId" placeholder="请输入员工编号" show-word-limit clearable
                         prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>
@@ -21,7 +21,7 @@
                         prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="8">
             <el-form-item label="性别" prop="sex">
               <el-select v-model="formData.sex" placeholder="请输入性别" clearable :style="{width: '100%'}">
                 <el-option v-for="(dict, index) in sexOptions" :key="dict.dictValue"
@@ -30,9 +30,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="9">
+          <el-col :span="8">
             <el-form-item label="出生日期" prop="birthDay">
-              <el-date-picker v-model="formData.birthDay" format="yyyy-MM-dd"  value-format="yyyy-MM-dd"
+              <el-date-picker v-model="formData.birthDay" format="yyyy-MM-dd" value-format="timestamp"
                               :style="{width: '100%'}" placeholder="请输入出生日期" :picker-options="pickerOptions"
                               clearable></el-date-picker>
             </el-form-item>
@@ -43,13 +43,13 @@
                         prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="8">
             <el-form-item label="婚姻状况" prop="marital">
               <el-input v-model="formData.marital" placeholder="请输入婚姻状况" show-word-limit clearable
                         prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="9">
+          <el-col :span="8">
             <el-form-item label="手机号码" prop="phone">
               <el-input v-model="formData.phone" placeholder="请输入手机号码" show-word-limit clearable
                         maxlength="11" prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>
@@ -65,15 +65,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="户口所在地" prop="hometown">
               <el-input v-model="formData.hometown" placeholder="请输入户口所在地" show-word-limit clearable
-                        prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="身份证" prop="idCard">
-              <el-input v-model="formData.idCard" placeholder="请输入身份证" show-word-limit clearable
                         prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>
             </el-form-item>
           </el-col>
@@ -85,7 +79,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="毕业时间" prop="graduationDay">
-              <el-date-picker v-model="formData.graduationDay" format="yyyy-MM-dd"  value-format="yyyy-MM-dd"
+              <el-date-picker v-model="formData.graduationDay" format="yyyy-MM-dd" value-format="timestamp"
                               :style="{width: '100%'}" placeholder="请输入毕业时间" :picker-options="pickerOptions"
                               clearable></el-date-picker>
             </el-form-item>
@@ -138,54 +132,41 @@
           <el-col :span="13">
             <el-form-item label="身份证正面" prop="idCardFront">
               <div class="receipt-images-wrap">
-                <el-upload :action="action+'idCardFront'"
-                           :show-file-list="false"
-                           :before-upload="beforeUpload"
+<!--                <el-upload ref="idCardFront" :action="action+'idCardFront'"-->
+                <el-upload ref="idCardFront" :action="action"
+                           v-loading="isUpload"
+                           :file-list="idCardFrontArray"
                            :on-success="handleUploadSuccess"
+                           :before-upload="beforeUpload" list-type="picture-card" accept="image/*"
                            :headers="{'Authorization': 'Bearer '+token}"
-                           accept="image/*">
-                  <el-button size="small">
-                    选择
-                    <i class="el-icon-upload el-icon--right"></i>
-                  </el-button>
+                           :class="{ hide: idCardFrontArray.length > 0 }"
+                           :before-remove="() => {
+                              idCardFrontArray=[];
+                            }"
+                >
+                  <i class="el-icon-plus"></i>
                   <div slot="tip" class="el-upload__tip">只能上传不超过 2MB 的image/*文件</div>
                 </el-upload>
-                <div class="clearPic">
-                  <el-button size="small" @click="clearPicture('idCardFront')">
-                    清空图片
-                    <i class="el-icon-close"></i>
-                  </el-button>
-                </div>
-                <div style="width: 200px;height: 200px;" v-if="formData.idCardFront">
-                  <el-image :src="baseUrl+formData.idCardFront" style="width: 200px;height: 200px;" :fit="'contain'" />
-                </div>
               </div>
             </el-form-item>
           </el-col>
           <el-col :span="13">
             <el-form-item label="身份证反面" prop="idCardBack">
               <div class="receipt-images-wrap">
-                <el-upload :action="action+'idCardBack'"
-                           :show-file-list="false"
-                           :before-upload="beforeUpload"
+                <el-upload ref="idCardBack" :action="action+'idCardBack'"
+                           v-loading="isUpload"
+                           :file-list="idCardBackArray"
                            :on-success="handleUploadSuccess"
+                           :before-upload="beforeUpload" list-type="picture-card" accept="image/*"
                            :headers="{'Authorization': 'Bearer '+token}"
-                           accept="image/*">
-                  <el-button size="small">
-                    选择
-                    <i class="el-icon-upload el-icon--right"></i>
-                  </el-button>
+                           :class="{ hide: idCardBackArray.length > 0 }"
+                           :before-remove="() => {
+                              idCardBackArray=[];
+                            }"
+                >
+                  <i class="el-icon-plus"></i>
                   <div slot="tip" class="el-upload__tip">只能上传不超过 2MB 的image/*文件</div>
                 </el-upload>
-                <div class="clearPic">
-                  <el-button size="small" @click="clearPicture('idCardBack')">
-                    清空图片
-                    <i class="el-icon-close"></i>
-                  </el-button>
-                </div>
-                <div style="width: 200px;height: 200px;" v-if="formData.idCardBack">
-                  <el-image :src="baseUrl+formData.idCardBack" style="width: 200px;height: 200px;" :fit="'contain'" />
-                </div>
               </div>
 
             </el-form-item>
@@ -193,54 +174,39 @@
           <el-col :span="13">
             <el-form-item label="毕业证" prop="diploma">
               <div class="receipt-images-wrap">
-                <el-upload :action="action+'diploma'"
-                           :show-file-list="false"
-                           :before-upload="beforeUpload"
+                <el-upload ref="diploma" :action="action+'diploma'"
+                           :file-list="diplomaArray"
+                           v-loading="isUpload"
                            :on-success="handleUploadSuccess"
+                           :before-upload="beforeUpload" list-type="picture-card" accept="image/*"
                            :headers="{'Authorization': 'Bearer '+token}"
-                           accept="image/*">
-                  <el-button size="small">
-                    选择
-                    <i class="el-icon-upload el-icon--right"></i>
-                  </el-button>
+                           :class="{ hide: diplomaArray.length > 0 }"
+                           :before-remove="() => {
+                              diplomaArray=[];
+                            }"
+                >
+                  <i class="el-icon-plus"></i>
                   <div slot="tip" class="el-upload__tip">只能上传不超过 2MB 的image/*文件</div>
                 </el-upload>
-                <div class="clearPic">
-                  <el-button size="small" @click="clearPicture('diploma')">
-                    清空图片
-                    <i class="el-icon-close"></i>
-                  </el-button>
-                </div>
-                <div style="width: 200px;height: 200px;" v-if="formData.diploma">
-                  <el-image :src="baseUrl+formData.diploma" style="width: 200px;height: 200px;" :fit="'contain'" />
-                </div>
               </div>
             </el-form-item>
           </el-col>
           <el-col :span="13">
             <el-form-item label="学位证" prop="degree">
               <div class="receipt-images-wrap">
-                <el-upload :action="action+'degree'"
-                           :show-file-list="false"
-                           :before-upload="beforeUpload"
+                <el-upload ref="degree" :action="action+'degree'"
+                           :file-list="degreeArray"
+                           v-loading="isUpload"
                            :on-success="handleUploadSuccess"
+                           :before-upload="beforeUpload" list-type="picture-card" accept="image/*"
                            :headers="{'Authorization': 'Bearer '+token}"
-                           accept="image/*">
-                  <el-button size="small">
-                    选择
-                    <i class="el-icon-upload el-icon--right"></i>
-                  </el-button>
+                           :class="{ hide: degreeArray.length > 0 }"
+                           :before-remove="() => {
+                              degreeArray=[];
+                            }">
+                  <i class="el-icon-plus"></i>
                   <div slot="tip" class="el-upload__tip">只能上传不超过 2MB 的image/*文件</div>
                 </el-upload>
-                <div class="clearPic">
-                  <el-button size="small" @click="clearPicture('degree')">
-                    清空图片
-                    <i class="el-icon-close"></i>
-                  </el-button>
-                </div>
-                <div style="width: 200px;height: 200px;" v-if="formData.degree">
-                  <el-image :src="baseUrl+formData.degree" style="width: 200px;height: 200px;" :fit="'contain'" />
-                </div>
               </div>
 
             </el-form-item>
@@ -257,15 +223,12 @@
 <script>
   import { listURP } from '@/api/resume/urp'
   import { updateStaff, addStaff } from '@/api/resume/staff'
-  import { uploadAvatar } from '@/api/system/user'
 
   export default {
     inheritAttrs: false,
     components: {},
     data() {
       return {
-        baseUrl:process.env.VUE_APP_BASE_API,
-        previews:{},
         //日期选择器配置
         pickerOptions: {
           disabledDate(time) { //当前时间以后的日期不可选
@@ -281,7 +244,7 @@
         //uploadList---存储学位证
         degreeArray: [],
         //证件照图片上传路径
-        action: process.env.VUE_APP_BASE_API + '/resume/staff/upload/',
+        action: process.env.VUE_APP_BASE_API + '/system/user/profile/avatar',
         //上传时发送的header
         token: '',
         //表单数据
@@ -305,8 +268,7 @@
           idCardFront: null,
           idCardBack: null,
           diploma: null,
-          degree: null,
-          idCard: null
+          degree: null
         },
         //表单验证规则
         rules: {
@@ -408,39 +370,11 @@
     mounted() {
     },
     methods: {
-      clearPicture(type){
-        if (type === 'degree') {
-          this.formData.degree = null
-
-        } else if (type === 'diploma') {
-          this.formData.diploma =null
-
-        } else if (type === 'idCardFront') {
-          this.formData.idCardFront = null
-
-        } else if (type === 'idCardBack') {
-          this.formData.idCardBack =null
-
-        }
-      },
-   /*   requestUpload() {
-
-        let formData = new FormData()
-        formData.append('avatarfile', data)
-        uploadAvatar(formData).then(response => {
-          this.open = false
-          this.options.img = response.imgUrl
-          store.commit('SET_AVATAR', this.options.img)
-          this.msgSuccess('修改成功')
-          this.visible = false
-        })
-
-      },*/
       //上传成功时---根据类型赋值
       handleUploadSuccess(res, file) {
         if (res) {
-          // console.log(res)
-          // console.log(file)
+          console.log(res)
+          console.log(file)
           if (res.imgUrl === null) {
             this.$message.error('上传失败，请检查您的网络', 'error')
           } else {
@@ -448,12 +382,24 @@
             let type = res.type
             if (type === 'degree') {
               this.formData.degree = res.imgUrl
+              // this.formData.degree = file.url
+              this.degreeArray.push({ 'url': res.imgUrl })
+
             } else if (type === 'diploma') {
               this.formData.diploma = res.imgUrl
+              // this.formData.diploma = file.url
+              this.diplomaArray.push({ 'url': res.imgUrl })
+
             } else if (type === 'idCardFront') {
               this.formData.idCardFront = res.imgUrl
+              // this.formData.idCardFront = file.url
+              this.idCardFrontArray.push({ 'url': res.imgUrl })
+
             } else if (type === 'idCardBack') {
               this.formData.idCardBack = res.imgUrl
+              // this.formData.idCardBack = file.url
+              this.idCardBackArray.push({ 'url': res.imgUrl })
+
             }
             this.$message.success('上传成功', 'success')
           }
@@ -484,7 +430,10 @@
           //给表单及uploadList赋值
           this.title = '编辑'
           this.formData = row
-          console.log( this.formData.idCardBack)
+          row.idCardFront ? this.idCardFrontArray.push({ 'url': row.idCardFront }) : ''
+          row.idCardBack ? this.idCardBackArray.push({ 'url': row.idCardBack }) : ''
+          row.diploma ? this.diplomaArray.push({ 'url': row.diploma }) : ''
+          row.degree ? this.degreeArray.push({ 'url': row.degree }) : ''
         }
         //显示表单
         this.dialogFormVisible = true
@@ -493,11 +442,9 @@
       handleClose(done) {
         this.$confirm('确认关闭？')
           .then(_ => {
-            // this.dialogFormVisible = false
-            // this.reset()
-            this.$emit('fetch-data')
-
             done()
+            this.dialogFormVisible = false
+            this.reset()
           })
           .catch(_ => {
           })
@@ -562,6 +509,10 @@
       },
       //重置表单
       reset() {
+        this.idCardFrontArray = []
+        this.idCardBackArray = []
+        this.diplomaArray = []
+        this.degreeArray = []
         this.formData = {
           userId: '',
           userName: '',
@@ -634,6 +585,11 @@
         //验证表单数据
         this.$refs['formData'].validate(valid => {
           if (valid) {
+            //将证件照路径传到表单中
+            this.formData.degree = this.degreeArray[0] ? this.degreeArray[0].url : null
+            this.formData.diploma = this.diplomaArray[0] ? this.diplomaArray[0].url : null
+            this.formData.idCardBack = this.idCardBackArray[0] ? this.idCardBackArray[0].url : null
+            this.formData.idCardFront = this.idCardFrontArray[0] ? this.idCardFrontArray[0].url : null
             //发送数据到添加接口
             if (this.title === '添加') {
               addStaff(this.formData).then(response => {
@@ -669,25 +625,9 @@
   .el-upload__tip {
     line-height: 1.2;
   }
-
   /*当上传文件超过1时，隐藏upload上传标签*/
   .receipt-images-wrap .hide .el-upload--picture-card {
     display: none;
-  }
-  .clearPic{
-    position: absolute;
-    top: 0;
-    left: 35%;
-    /*right: 5%;*/
-    z-index: 999;
-    text-align: center;
-    vertical-align: center;
-    /*transform: translate(50%, -50%);*/
-    /*width: 180px;*/
-    /*height: 180px;*/
-    /*border-radius: 50%;*/
-    /*box-shadow: 0 0 4px #ccc;*/
-    /*overflow: hidden;*/
   }
 
 </style>

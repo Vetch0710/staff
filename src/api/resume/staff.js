@@ -53,7 +53,22 @@ export function upload(type) {
     method: 'post'
   })
 }
+// 上传证件照
+export function uploadTemp() {
+  return request({
+    url: '/resume/staff/upload',
+    method: 'post'
+  })
+}
 
+// 导出用户
+export function exportStaff(file) {
+  return request({
+    url: '/resume/staff/export',
+    method: 'post',
+    data: file
+  })
+}
 
 
 /*

@@ -459,7 +459,7 @@ export default {
     getList() {
       this.loading = true;
       listUser(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-        console.log(response)
+        // console.log(response)
           this.userList = response.rows;
           this.total = response.total;
           this.loading = false;
@@ -624,8 +624,10 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
+        console.log("11111111")
           return exportUser(queryParams);
         }).then(response => {
+        console.log("1222222222222222")
           this.download(response.msg);
         }).catch(function() {});
     },
