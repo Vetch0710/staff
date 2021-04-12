@@ -75,7 +75,7 @@
       },
       // 上传预处理
       beforeUpload(file) {
-        console.log(file);
+        console.log(file)
         this.file = file
       },
       // 提交上传文件
@@ -95,9 +95,10 @@
           }).then(() => {
             let formData = new FormData()
             formData.append('file', this.file)
-           return  exportStaff(formData)
+            return exportStaff(formData)
           }).then(response => {
             this.download(response.msg)
+            this.upload.open = false
           }).catch(function() {
 
           })
