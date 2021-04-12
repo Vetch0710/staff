@@ -101,7 +101,7 @@ public class RuoYiConfig
     /**
      * 获取证件照上传路径
      */
-    public static String getProfilePath(String username)
+    public static String getProfilePath()
     {
         return getProfile()+"/profile" ;
     }

@@ -90,14 +90,16 @@ public class WordUtil {
                 int end = newText.indexOf("}");
                 str.append(newText.substring(0, start));
                 String key = newText.substring(start + 2, end);
-                System.out.println(key);
-                String value =  String.valueOf(textMap.get(key));
-                if (value!=null&& !"".equals(value) && !"null".equals(value)) {
+                String value = String.valueOf(textMap.get(key));
+                if (value != null && !"".equals(value) && !"null".equals(value)) {
                     if ("idCardFront".equals(key) || "idCardBack".equals(key) || "diploma".equals(key) || "degree".equals(key)) {
-                        paragraph.createRun().setText(str.toString());
-                        in = new FileInputStream(value);
-                        paragraph.createRun().addPicture(in, XWPFDocument.PICTURE_TYPE_PNG, key, Units.toEMU(width), Units.toEMU(height));
-                        str.delete(0, str.length());
+                        File file = new File(value);
+                        if (file.exists()) {
+                            paragraph.createRun().setText(str.toString());
+                            in = new FileInputStream(file);
+                            paragraph.createRun().addPicture(in, XWPFDocument.PICTURE_TYPE_PNG, key, Units.toEMU(width), Units.toEMU(height));
+                            str.delete(0, str.length());
+                        }
                     } else {
                         str.append(value);
                     }
