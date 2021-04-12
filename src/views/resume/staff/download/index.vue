@@ -11,6 +11,7 @@
         :headers="upload.headers"
         :action="upload.url"
         :disabled="upload.isUploading"
+        v-loading="upload.isUploading"
         :on-progress="handleFileUploadProgress"
         :show-file-list="true"
         :auto-upload="false"
@@ -25,7 +26,7 @@
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="down()">确 定</el-button>
-        <el-button @click="upload.open = false">取 消</el-button>
+        <el-button @click="close">取 消</el-button>
       </div>
 
     </el-dialog>
@@ -54,7 +55,8 @@
           headers: { Authorization: 'Bearer ' + getToken() },
           // 上传的地址
           url: process.env.VUE_APP_BASE_API + '/resume/staff/upload',
-          file: {}
+          file: {},
+          id: ''
         }
       }
     },
@@ -66,9 +68,13 @@
     mounted() {
     },
     methods: {
-      showDownload() {
+      showDownload(row) {
+        this.id = ''
         this.upload.open = true
-
+        this.upload.isUploading = false
+        if (row) {
+          this.id = row
+        }
       },
       handleFileUploadProgress(event, file, fileList) {
         this.upload.isUploading = true
@@ -82,23 +88,43 @@
       async submitFileForm() {
         this.$refs.upload.submit()
       },
+      close() {
+        this.$refs.upload.clearFiles()
+        this.upload.open = false
+        this.upload.isUploading = false
+      },
       // 提交上传文件
       async down() {
         return new Promise(((resolve) => {
-          this.$confirm('是否确认导出所有用户数据项?', '警告', {
+          this.$confirm('是否确认导出数据?', '警告', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
+            this.upload.isUploading = true
             this.submitFileForm()
             resolve(true)
           }).then(() => {
-            let formData = new FormData()
-            formData.append('file', this.file)
-            return exportStaff(formData)
+            if (this.file){
+              this.upload.isUploading = true
+              let formData = new FormData()
+              formData.append('file', this.file)
+              return exportStaff(formData, {
+                'id': this.id ? this.id : 'null'
+              })
+            }else {
+              this.$message.error("请上传文件")
+              this.upload.isUploading = false
+            }
+
           }).then(response => {
-            this.download(response.msg)
+            if (response.msg !== 'fileName') {
+              this.download(response.msg)
+            }
+            this.$refs.upload.clearFiles()
             this.upload.open = false
+            this.upload.isUploading = false
+
           }).catch(function() {
 
           })

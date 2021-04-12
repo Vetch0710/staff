@@ -62,9 +62,9 @@ export function uploadTemp() {
 }
 
 // 导出用户
-export function exportStaff(file) {
+export function exportStaff(file,id) {
   return request({
-    url: '/resume/staff/export',
+    url: '/resume/staff/export/'+id.id,
     method: 'post',
     data: file
   })

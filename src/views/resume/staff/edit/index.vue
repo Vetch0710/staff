@@ -55,7 +55,7 @@
                         maxlength="11" prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item label="职工级别" prop="workLevel">
               <el-select v-model="formData.workLevel" placeholder="请输入职工级别" clearable
                          :style="{width: '100%'}">
@@ -63,6 +63,12 @@
                            :label="dict.dictLabel"
                            :value="dict.dictValue"></el-option>
               </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="9">
+            <el-form-item label="职务" prop="position">
+              <el-input v-model="formData.position" placeholder="请输入职务" show-word-limit clearable
+                        prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -306,7 +312,8 @@
           idCardBack: null,
           diploma: null,
           degree: null,
-          idCard: null
+          idCard: null,
+          position: null,
         },
         //表单验证规则
         rules: {
@@ -359,6 +366,7 @@
           graduationDay: [],
           major: [],
           school: [],
+          position: [],
           department: [{
             required: true,
             message: '请输入所属部门',

@@ -122,7 +122,7 @@
               type="warning"
               icon="el-icon-download"
               size="mini"
-              @click="handleExport"
+              @click="handleExport(null)"
               v-hasPermi="['resume:staff:export']"
             >导出
             </el-button>
@@ -395,20 +395,25 @@
         })
       },
       /** 导出按钮操作 */
-      handleExport() {
-        this.$confirm('是否确认导出当前用户下所有的员工简历?', '警告', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$refs["download"].showDownload();
+      handleExport(row) {
+        if (row){
+          this.$refs["download"].showDownload(row.userId);
+        }else{
+          this.$confirm('是否确认导出当前用户下所有的员工简历?', '警告', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$refs["download"].showDownload();
 
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消下载'
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消下载'
+            });
           });
-        });
+        }
+
 
 
 
