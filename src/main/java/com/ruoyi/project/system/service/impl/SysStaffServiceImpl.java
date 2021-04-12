@@ -216,7 +216,7 @@ public class SysStaffServiceImpl implements ISysStaffService {
      * @param queryVo 查询条件
      * @return 结果
      */
-    public List<HashMap<String,String>> exportStaff(QueryVo queryVo){
-        return staffMapper.exportStaff(queryVo);
+    public List<HashMap<String,String>> exportStaff(QueryVo queryVo,String id){
+        return staffMapper.exportStaff(queryVo,id);
     }
 }

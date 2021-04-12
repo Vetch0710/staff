@@ -87,6 +87,6 @@ public interface ISysStaffService
      * @param queryVo 查询条件
      * @return 结果
      */
-    public List<HashMap<String,String>> exportStaff(QueryVo queryVo);
+    public List<HashMap<String,String>> exportStaff(QueryVo queryVo,String id);
 
 }

@@ -61,8 +61,17 @@ public class SysStaff {
     /** 信息填写状态 */
     private String isFinish  ;
     private String idCard  ;
+    private String position  ;
 
-    public SysStaff(String userId, String userName, String sex, Integer age, String birthDay, String phone, String nation, String marital, String hometown, String eduBackground, String school, String major, String graduationDay, String workDay, String workLevel, String department, String projectTeam, String leader, String idCardFront, String idCardBack, String diploma, String degree, String isFinish, String idCard) {
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public SysStaff(String userId, String userName, String sex, Integer age, String birthDay, String phone, String nation, String marital, String hometown, String eduBackground, String school, String major, String graduationDay, String workDay, String workLevel, String department, String projectTeam, String leader, String idCardFront, String idCardBack, String diploma, String degree, String isFinish, String idCard, String position) {
         this.userId = userId;
         this.userName = userName;
         this.sex = sex;
@@ -87,6 +96,7 @@ public class SysStaff {
         this.degree = degree;
         this.isFinish = isFinish;
         this.idCard = idCard;
+        this.position = position;
     }
 
     public SysStaff() {
@@ -315,6 +325,7 @@ public class SysStaff {
                 ", degree='" + degree + '\'' +
                 ", isFinish='" + isFinish + '\'' +
                 ", idCard='" + idCard + '\'' +
+                ", position='" + position + '\'' +
                 '}';
     }
 }

@@ -29,6 +29,7 @@
         <result property="degree" column="DEGREE"/>
         <result property="isFinish" column="ISFINISH"/>
         <result property="idCard" column="IDCARD"/>
+        <result property="position" column="POSITION"/>
     </resultMap>
     <resultMap type="HashMap" id="SysStaffResultMap">
         <id property="userId" column="ID"/>
@@ -55,6 +56,7 @@
         <result property="degree" column="DEGREE"/>
         <result property="isFinish" column="ISFINISH"/>
         <result property="idCard" column="IDCARD"/>
+        <result property="position" column="POSITION"/>
     </resultMap>
 
     <sql id="selectStaffVo">
@@ -81,16 +83,17 @@
                s.DIPLOMA,
                s.DEGREE,
                s.ISFINISH,
+               s.POSITION,
                s.IDCARD
         from sys_staff s
 
     </sql>
-<!--  case when  s.SEX == '0'then '男' else '女' end  as  SEX,-->
+    <!--  case when  s.SEX == '0'then '男' else '女' end  as  SEX,-->
 
     <sql id="selectStaffMap">
         select s.ID,
                s.NAME,
-               (case when s.SEX='0' then '男' when  s.SEX='1' then '女' end ) as SEX,
+               (case when s.SEX = '0' then '男' when s.SEX = '1' then '女' end) as SEX,
                s.AGE,
                s.BIRTH_DAY,
                s.PHONE,
@@ -111,6 +114,7 @@
                s.DIPLOMA,
                s.DEGREE,
                s.ISFINISH,
+               s.POSITION,
                s.IDCARD
         from sys_staff s
 
@@ -143,24 +147,27 @@
         ${params.dataScope}
     </select>
 
-    <select id="exportStaff" parameterType="QueryVo" resultMap="SysStaffResultMap" >
+    <select id="exportStaff" resultMap="SysStaffResultMap">
         <include refid="selectStaffMap"/>
         <where>
 
-            <if test="deptName != null and deptName != ''">
-                AND s.DEPARTMENT = #{deptName}
+            <if test="queryVo.deptName != null and queryVo.deptName != ''">
+                AND s.DEPARTMENT = #{queryVo.deptName}
             </if>
-            <if test="projectName != null and projectName != ''">
-                AND s.PROJECT_TEAM =#{projectName}
+            <if test="queryVo.projectName != null and queryVo.projectName != ''">
+                AND s.PROJECT_TEAM =#{queryVo.projectName}
             </if>
-            <if test="projectManager != null and projectManager != ''">
-                AND s.LEADER like '%'|| #{projectManager}|| '%'
+            <if test="queryVo.projectManager != null and queryVo.projectManager != ''">
+                AND s.LEADER like '%'|| #{queryVo.projectManager}|| '%'
+            </if>
+            <if test="id != null and id != 'null'">
+                AND s.ID=#{id}
             </if>
 
         </where>
-          <!--  <foreach collection="array" item="userId" open="(" separator="," close=")">
-                #{userId}
-            </foreach>-->
+        <!--  <foreach collection="array" item="userId" open="(" separator="," close=")">
+              #{userId}
+          </foreach>-->
 
 
     </select>
@@ -195,8 +202,9 @@
         <if test="idCardBack != null and idCardBack != ''">IDCARD_BACK,</if>
         <if test="diploma != null and diploma != ''">DIPLOMA,</if>
         <if test="degree != null and degree != ''">DEGREE,</if>
-        <if test="isFinish != null and isFinish != ''">ISFINISH,</if>
-        <if test="idCard != null and idCard != ''">IDCARD</if>
+        <if test="idCard != null and idCard != ''">IDCARD,</if>
+        <if test="position != null and position != ''">POSITION,</if>
+        <if test="isFinish != null and isFinish != ''">ISFINISH</if>
         )values(
         <if test="userId != null and userId != ''">#{userId},</if>
         <if test="userName != null and userName != ''">#{userName},</if>
@@ -220,8 +228,9 @@
         <if test="idCardBack != null and idCardBack != ''">#{idCardBack},</if>
         <if test="diploma != null and diploma != ''">#{diploma},</if>
         <if test="degree != null and degree != ''">#{degree},</if>
-        <if test="isFinish != null and isFinish != ''">#{isFinish},</if>
-        <if test="idCard != null and idCard != ''">#{idCard}</if>
+        <if test="idCard != null and idCard != ''">#{idCard},</if>
+        <if test="position != null and position != ''">#{position},</if>
+        <if test="isFinish != null and isFinish != ''">#{isFinish}</if>
         )
     </insert>
 
@@ -248,6 +257,7 @@
             WORK_DAY = #{workDay},
             IDCARD_FRONT = #{idCardFront},
             IDCARD_BACK = #{idCardBack},
+            POSITION = #{position},
             DIPLOMA = #{diploma},
             DEGREE = #{degree},
             IDCARD = #{idCard}

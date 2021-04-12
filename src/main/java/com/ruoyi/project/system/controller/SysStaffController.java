@@ -149,8 +149,8 @@ public class SysStaffController extends BaseController {
 
     @Log(title = "简历下载", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('resume:staff:export')")
-    @PostMapping("/export")
-    public AjaxResult export(@RequestBody MultipartFile file, QueryVo queryVo) {
+    @PostMapping("/export/{ids}")
+    public AjaxResult export(@RequestBody MultipartFile file, QueryVo queryVo, @PathVariable("ids") String id) {
         if (file == null) {
             return AjaxResult.error("模板文件为空");
         }
@@ -158,65 +158,57 @@ public class SysStaffController extends BaseController {
             LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
             SysUser user = loginUser.getUser();
             String userName = user.getUserName();
-            Map<String, String> role = urpService.selectRoleAndDeptByUserId(user.getUserId());
-            if (!"管理员".equals(role.get("roleName"))) {
-                queryVo.setDeptName(role.get("deptName"));
-                if ("项目经理".equals(role.get("roleName"))) {
-                    String proName = urpService.selectProByUserId(user.getUserId());
-                    queryVo.setProjectName(proName);
-                    queryVo.setProjectManager(user.getUserName());
+            if (id == null || "null".equals(id)) {
+                Map<String, String> role = urpService.selectRoleAndDeptByUserId(user.getUserId());
+                if (!"管理员".equals(role.get("roleName"))) {
+                    queryVo.setDeptName(role.get("deptName"));
+                    if ("项目经理".equals(role.get("roleName"))) {
+                        String proName = urpService.selectProByUserId(user.getUserId());
+                        queryVo.setProjectName(proName);
+                        queryVo.setProjectManager(user.getUserName());
+                    }
                 }
             }
-            List<HashMap<String, String>> list = staffService.exportStaff(queryVo);
+            List<HashMap<String, String>> list = staffService.exportStaff(queryVo, id);
             System.out.println(list);
             InputStream is = file.getInputStream();
-//            map.put("degree", "C:/Users/75440/Desktop/upload/profile/2021/04/11/ee299936a0d49b94f601a0eb4687e1f7.jpeg");
             List<String> files = new ArrayList<>();
             int frontText = Constants.RESOURCE_PREFIX.length();
+            String filename="";
             for (HashMap<String, String> map : list) {
 
-                String filename = map.get("workLevel") + "-" + map.get("userName") + ".docx";
+                filename = map.get("position") + "-" + map.get("userName") + ".docx";
                 //拼接证件照照片路径
-                map.put("degree",!"null".equals(map.get("degree"))&&map.get("degree")!=null? RuoYiConfig.getProfile()+map.get("degree").substring(frontText):"null");
-                map.put("diploma",!"null".equals(map.get("diploma"))&&map.get("diploma")!=null? RuoYiConfig.getProfile()+map.get("diploma").substring(frontText):"null");
-                map.put("idCardFront",!"null".equals(map.get("idCardFront"))&&map.get("idCardFront")!=null? RuoYiConfig.getProfile()+map.get("idCardFront").substring(frontText):"null");
-                map.put("idCardBack",!"null".equals(map.get("idCardBack"))&&map.get("idCardBack")!=null? RuoYiConfig.getProfile()+map.get("idCardBack").substring(frontText):"null");
-//                map.put("degree", RuoYiConfig.getProfile() + map.get("degree").substring(frontText));
-//                map.put("diploma", RuoYiConfig.getProfile() + map.get("diploma").substring(frontText));
-//                map.put("idCardFront", RuoYiConfig.getProfile() + map.get("idCardFront").substring(frontText));
-//                map.put("idCardBack", RuoYiConfig.getProfile() + map.get("idCardBack").substring(frontText));
+                map.put("degree", !"null".equals(map.get("degree")) && map.get("degree") != null ? RuoYiConfig.getProfile() + map.get("degree").substring(frontText) : "null");
+                map.put("diploma", !"null".equals(map.get("diploma")) && map.get("diploma") != null ? RuoYiConfig.getProfile() + map.get("diploma").substring(frontText) : "null");
+                map.put("idCardFront", !"null".equals(map.get("idCardFront")) && map.get("idCardFront") != null ? RuoYiConfig.getProfile() + map.get("idCardFront").substring(frontText) : "null");
+                map.put("idCardBack", !"null".equals(map.get("idCardBack")) && map.get("idCardBack") != null ? RuoYiConfig.getProfile() + map.get("idCardBack").substring(frontText) : "null");
                 //word文件保存路径
-                String downloadPath = RuoYiConfig.getDownloadStaffPath() + userName + "/" + filename;
+//                String downloadPath = RuoYiConfig.getDownloadStaffPath() + userName + "/" + filename;
+                String downloadPath = RuoYiConfig.getDownloadPath()  + "/" + filename;
                 File desc = new File(downloadPath);
                 if (!desc.getParentFile().exists()) {
                     desc.getParentFile().mkdirs();
                 }
                 is = file.getInputStream();
                 OutputStream os = new FileOutputStream(downloadPath);
-                if (WordUtil.changWord(is, os, map, 100, 100)) {
+                if (WordUtil.changWord(is, os, map, 200, 200)) {
                     files.add(downloadPath);
                 }
             }
 //            is.close();
             //生成新的word文档
             System.out.println(files);
-            String zip = WordUtil.createZip(files, userName);
-            return AjaxResult.success(zip);
+            if (files.size()>1){
+                String zip = WordUtil.createZip(files, userName);
+                return AjaxResult.success(zip);
+            }
+          return AjaxResult.success(filename);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
 
         }
-//        try {
-//            for (HashMap<String, String> stringStringHashMap : list) {
-//                WordUtil.changWord(file.getInputStream(),);
-//            }
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }finally {
-//
-//        }
-
         return AjaxResult.error("fileName");
     }
 
