@@ -180,6 +180,7 @@ public class SysStaffController extends BaseController {
                 if (!desc.getParentFile().exists()) {
                     desc.getParentFile().mkdirs();
                 }
+                is = file.getInputStream();
                 OutputStream os = new FileOutputStream(downloadPath);
                 if (  WordUtil.changWord(is, os, map, 100, 100)){
                     files.add(downloadPath);

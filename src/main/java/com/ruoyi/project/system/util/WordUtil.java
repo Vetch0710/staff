@@ -43,8 +43,8 @@ public class WordUtil {
             WordUtil.changeTable(document, textMap, height, width);
 
             document.write(outputStream);
-//            document.close();
-//            outputStream.close();
+            document.close();
+            outputStream.close();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
