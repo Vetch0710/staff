@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row :gutter="20">
       <!--用户数据-->
-      <el-col :span="20" :xs="24">
+      <el-col :xs="24">
         <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="90px">
           <el-form-item label="员工名称" prop="userName">
             <el-input
@@ -195,8 +195,8 @@
       </el-col>
     </el-row>
 
-    <edit ref="edit"  @fetch-data="getList"></edit>
-    <download ref="download" ></download>
+    <edit ref="edit" @fetch-data="getList" :udp="udp"></edit>
+    <download ref="download"></download>
   </div>
 </template>
 
@@ -211,16 +211,18 @@
   } from '@/api/resume/staff'
   import { getToken } from '@/utils/auth'
   import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-  import Edit from "./edit/index";
-  import Download from "./download/index";
+  import Edit from './edit/index'
+  import Download from './download/index'
+  import { listURP } from '@/api/resume/urp'
+  import Logo from '../../../layout/components/Sidebar/Logo'
 
   export default {
     name: 'index',
-    components: { Edit,Download},
+    components: { Edit, Download },
     data() {
       return {
         //员工编号
-        sid:'',
+        sid: '',
         // 遮罩层
         loading: true,
         // 选中数组
@@ -319,13 +321,17 @@
               trigger: 'blur'
             }
           ]
+        },
+        udp: {
+          deptAndPro: [],
+          proAndManager: [],
+          udpMessage: {},
+          departmentNames: []
         }
       }
     },
-    watch: {
-    },
+    watch: {},
     created() {
-
       this.getList()
       this.getDicts('hc_sure_state').then(response => {
         this.finishStatusOptions = response.data
@@ -340,6 +346,27 @@
         this.levelOptions = response.data
       })
 
+      listURP().then(response => {
+        //部门与项目匹配关系集合
+        this.udp.deptAndPro = response.data.deptAndPro
+        //项目与项目经理匹配关系集合
+        this.udp.proAndManager = response.data.proAndManager
+        console.log( this.udp.proAndManager)
+        //该用户的部门、部门经理、部门名
+        this.udp.udpMessage = response.data.udp
+        //部门名称集合
+        this.udp.departmentNames = response.data.departmentNames
+        let role = this.$store.getters.roles[0]
+
+        if (role !== 'admin') {
+          this.queryParams.projectName = this.udp.udpMessage.projectName
+          this.queryParams.deptName = this.udp.udpMessage.deptName
+          this.queryParams.projectManager = this.udp.udpMessage.projectManager
+        }
+      })
+    },
+
+    mounted() {
     },
     methods: {
       /** 查询用户列表 */
@@ -372,11 +399,11 @@
       },
       /** 新增按钮操作 */
       handleAdd() {
-        this.$refs["edit"].showEdit();
+        this.$refs['edit'].showEdit()
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
-        this.$refs["edit"].showEdit(row);
+        this.$refs['edit'].showEdit(row)
       },
       //删除数据
       handleDelete(row) {
@@ -396,26 +423,23 @@
       },
       /** 导出按钮操作 */
       handleExport(row) {
-        if (row){
-          this.$refs["download"].showDownload(row.userId);
-        }else{
+        if (row) {
+          this.$refs['download'].showDownload(row.userId)
+        } else {
           this.$confirm('是否确认导出当前用户下所有的员工简历?', '警告', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            this.$refs["download"].showDownload();
+            this.$refs['download'].showDownload()
 
           }).catch(() => {
             this.$message({
               type: 'info',
               message: '已取消下载'
-            });
-          });
+            })
+          })
         }
-
-
-
 
       },
 
@@ -424,7 +448,7 @@
         importTemplate().then(response => {
           this.download(response.msg)
         })
-      },
+      }
 
     }
   }

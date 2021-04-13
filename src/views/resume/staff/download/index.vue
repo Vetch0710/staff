@@ -122,6 +122,7 @@
               this.download(response.msg)
             }
             this.$refs.upload.clearFiles()
+            this.file=''
             this.upload.open = false
             this.upload.isUploading = false
 

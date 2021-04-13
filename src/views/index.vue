@@ -1,15 +1,15 @@
 <template>
 <div class="app-container nickstyle" >
   <div class="home ui-flex justify-center center nickstyle" >
-    
+
     <img class="indexlogoimg" v-bind:src="logo" alt=" " />
-    <div class="indexlogotext" >小闹钟系统</div>
-  </div>  
+    <div class="indexlogotext" >简历管理系统</div>
+  </div>
 
 
 </div>
 
-    
+
 </template>
 
 <script>
@@ -63,17 +63,17 @@ export default {
 
     //首次加载
     // console.log("//首次加载");
-    
+
     // console.log('mounted getlist之后'+this.formlist);
 
     // this.timerGetList();
     // timer1 timer2 ??
       //快速 持续读取队列
-      this.timer1 = 
-      setInterval(this.timerNotify, 180);
-      //慢速 请求新数据并清空当前提醒
-      this.timer2 = 
-      setInterval(this.timerGetList, 60000);
+      // this.timer1 =
+      // setInterval(this.timerNotify, 180);
+      // //慢速 请求新数据并清空当前提醒
+      // this.timer2 =
+      // setInterval(this.timerGetList, 60000);
 
 
               // this.getNotiList();
@@ -86,7 +86,7 @@ export default {
     goTarget(href) {
       window.open(href, "_blank");
     },
-    
+
     open1(listitem) {
                 const h = this.$createElement;
                 let i =this.notiarr.length;
@@ -97,7 +97,7 @@ export default {
                                   props: {
                                     msg: listitem,
                                     // theparaent:this.$data.link
-                                    
+
                                   }
                                 }),
                         h('a', {
@@ -172,9 +172,9 @@ export default {
                       }, "确 认")
                   ]
                   )
-                  ] 
-                  
-                  
+                  ]
+
+
                   ),
                   position: 'bottom-right',
                   duration: 0,
@@ -188,7 +188,7 @@ export default {
             clickYes(i){
                 //  alert("处理点击标签");
                  setSureState(i);
-                
+
             },
             clickBtn(){
                 alert("处理点击按钮");
@@ -255,12 +255,12 @@ export default {
               listInfo().then(response => {
                 this.formlist = response.rows;
                 // console.log('加载完毕'+this.formlist)
-              //清空当然noti  
-              
+              //清空当然noti
+
                   // this.timerNotify();
                   // this.firstload=0;
 
-                
+
               });
             },
             closeAllNoti(){
@@ -268,7 +268,7 @@ export default {
                   i.close();
               }
             }
-               
+
 
 
   },
@@ -295,16 +295,16 @@ export default {
         }
 
         .ui-flex.justify-center {
-            
-            
+
+
             -ms-flex-pack: center;
             justify-content: center
         }
         .ui-flex.center {
             -ms-flex-pack: center;
             justify-content: center;
-            
-            
+
+
             -ms-flex-align: center;
             align-items: center
         }

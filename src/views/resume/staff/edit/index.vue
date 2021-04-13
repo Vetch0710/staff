@@ -404,11 +404,15 @@
         //项目与项目经理匹配关系
         proAndManager: [],
         //是否正在加载
-        isUpload: false
+        isUpload: false,
       }
     },
     computed: {},
     watch: {},
+    //获取部门名称集合、部门与项目匹配关系集合、项目与项目经理匹配关系集合、该用户的部门、部门经理、部门名
+    props:{
+      udp:{}
+    },
     created() {
       //从store中获取token
       this.token = this.$store.getters.token
@@ -485,6 +489,7 @@
       //显示弹窗--根据父组件是否传值判断是添加还是修改数据
       showEdit(row) {
         //清空表单数据
+        console.log(this.udp)
         this.reset()
         if (!row) {
           this.title = '添加'
@@ -494,6 +499,10 @@
           this.formData = row
           console.log( this.formData.idCardBack)
         }
+        this.deptAndPro =this.udp.deptAndPro
+        //项目与项目经理匹配关系集合
+        this.proAndManager = this.udp.proAndManager
+        this.udpMessage = this.udp.udpMessage
         //显示表单
         this.dialogFormVisible = true
       },
@@ -515,8 +524,39 @@
         //获取当前用户的角色
         this.role = this.$store.getters.roles[0]
         //获取全部数据，前端根据角色进行筛选
-        //获取部门名称集合、部门与项目匹配关系集合、项目与项目经理匹配关系集合、该用户的部门、部门经理、部门名
-        listURP().then(response => {
+
+          //当前角色为管理员---先加载部门下拉列表，项目和项目经理下拉列表中的数据根据 所选部门及匹配关系 动态加载
+          if (this.role === 'admin') {
+            this.departmentOptions = this.udp.departmentNames
+          } else if (this.role === 'ProjectManager') {
+            //当前角色为项目经理---确定部门、项目和项目经理下拉列表
+            let arr = [], temp = [], mid = []
+            //保存部门名称
+            this.formData.department = mid[0] =  this.udpMessage.deptName
+            //保存项目名称
+            this.formData.projectTeam = arr[0] =  this.udpMessage.projectName
+            //保存项目经理名称
+            this.formData.leader = temp[0] =  this.udpMessage.projectManager
+            this.departmentOptions = mid
+            this.projectOptions = arr
+            this.projectManagerOptions = temp
+
+          } else if (this.role === 'DepartmentManager') {
+            //当前角色为部门经理---确定部门下拉列表，项目和项目经理下拉列表根据 所选部门及匹配关系 动态加载
+            let arr = []
+            this.formData.department = arr[0] =  this.udpMessage.deptName
+            this.departmentOptions = arr
+            //根据匹配关系找到该部门的所有项目
+            let index = this.deptAndPro.findIndex(item => {
+              if (item.departmentName ===  this.udpMessage.deptName) {
+                return true
+              }
+            })
+            //将筛选的项目加载到项目下拉列表
+            this.projectOptions = this.deptAndPro[index].projectName
+          }
+
+       /* listURP().then(response => {
           //部门与项目匹配关系集合
           this.deptAndPro = response.data.deptAndPro
           //项目与项目经理匹配关系集合
@@ -553,7 +593,7 @@
             //将筛选的项目加载到项目下拉列表
             this.projectOptions = this.deptAndPro[index].projectName
           }
-        })
+        })*/
         //获取职工级别字典数据
         this.getDicts('resume_staff_level').then(response => {
           this.levelOptions = response.data
@@ -623,13 +663,17 @@
         if (this.role !== 'ProjectManager') {
           //项目经理不可更改项目
           if (value !== undefined && value !== '') {
-            let index = this.proAndManager.findIndex(item => {
+            let index = this.proAndManager.filter(item => {
               if (item.projectName.trim() === value.trim()) {
                 return true
               }
             })
             let arr = []
-            arr[0] = this.proAndManager[index].projectManager
+            index.forEach((item,index)=>{
+              arr[index]=item.projectManager
+            })
+
+            // arr[0] = this.proAndManager[index].projectManager
             this.projectManagerOptions = arr
             this.formData.leader = ''
           } else {
